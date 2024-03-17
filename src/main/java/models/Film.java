@@ -1,5 +1,8 @@
 package models;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "film")
 public class Film {
    public Film(int id, String title, int year, String director, String stars,
 			String review) {
@@ -13,11 +16,17 @@ public class Film {
 	}
    
    
-   public Film() {
-		super();
+   public Film(String title, int year, String director, String stars,
+			String review) {
+	   	this.title = title;
+		this.year = year;
+		this.director = director;
+		this.stars = stars;
+		this.review = review;
 	}
 	
-	
+   public Film(){}
+
    int id;
    String title;
    int year;

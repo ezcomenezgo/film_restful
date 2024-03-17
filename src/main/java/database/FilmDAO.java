@@ -121,8 +121,8 @@ public class FilmDAO {
 	   boolean b = false;
 	   try {
 		   String sql = "insert into films (title, year, director, stars, review) values ("
-		   		+ "'" + f.getTitle() + "','" 
-				+ f.getYear() + "','" 
+		   		+ "'" + f.getTitle() + "'," 
+				+ f.getYear() + ",'" 
 				+ f.getDirector() + "','" 
 				+ f.getStars() + "','" 
 				+ f.getReview()
