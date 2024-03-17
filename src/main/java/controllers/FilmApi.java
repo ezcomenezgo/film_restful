@@ -43,9 +43,7 @@ public class FilmApi extends HttpServlet {
 		String allFilmsBaseOnType = "";
 		// set response base on different type
 		if (type.equals("json")) {
-			allFilmsBaseOnType = gson.toJson(allFilms);
-			System.out.println("test");
-			
+			allFilmsBaseOnType = gson.toJson(allFilms);			
 		} else if (type.equals("xml")) {
 			FilmsList films = new FilmsList(allFilms);
 			StringWriter sw = new StringWriter();
@@ -72,22 +70,18 @@ public class FilmApi extends HttpServlet {
 		FilmDAO dao = new FilmDAO();
 		Film film = new Film();
 		PrintWriter out = response.getWriter();
-//		StringReader stringReader = new StringReader();
 		
 		// 處理「'」標點符號問題
 		BufferedReader reader = request.getReader();
 		String type = request.getContentType();
-		System.out.println("reader: " + reader);
 		if (type.equals("application/json")) {
 			Gson gson = new Gson();
 			film = gson.fromJson(reader, Film.class);
-			System.out.println("JSON film title: " + film.getTitle());
 		} else if (type.equals("application/xml")) {
 			try {
 				JAXBContext jaxbContext = JAXBContext.newInstance(Film.class);
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				film = (Film) jaxbUnmarshaller.unmarshal(reader);
-				System.out.println("XML film title: " + film.getTitle());
 			} catch (JAXBException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -98,7 +92,6 @@ public class FilmApi extends HttpServlet {
 			boolean result = dao.insertFilm(film);
 			
 			if (result) {
-				System.out.println("res: " + result);
 				out.write("Film inserted!");
 			}
 		} catch (SQLException e) {
@@ -106,5 +99,43 @@ public class FilmApi extends HttpServlet {
 		}
 		
 		out.close();
+	}
+	
+	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		FilmDAO dao = new FilmDAO();
+		PrintWriter out = response.getWriter();
+		Film film = new Film();
+		int id = 0;
+		
+		BufferedReader reader = request.getReader();
+		String type = request.getContentType();
+		
+		if (type.equals("application/json")) {
+			Gson gson = new Gson();
+			film = gson.fromJson(reader, Film.class);
+			id = film.getId();
+		} else if (type.equals("application/xml")) {
+			try {
+				JAXBContext jaxbContext = JAXBContext.newInstance(Film.class);
+				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				film = (Film) jaxbUnmarshaller.unmarshal(reader);
+				id = film.getId();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			boolean result = dao.deleteFilmById(id);
+			
+			if (result) {
+				out.write("Film deleted!");
+			} 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
