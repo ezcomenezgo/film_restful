@@ -102,6 +102,43 @@ public class FilmApi extends HttpServlet {
 	}
 	
 	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		FilmDAO dao = new FilmDAO();
+		PrintWriter out = response.getWriter();
+		Film film = new Film();
+		
+		BufferedReader reader = request.getReader();
+		String type = request.getContentType();
+		if (type.equals("application/json")) {
+			Gson gson = new Gson();
+			film = gson.fromJson(reader, Film.class);
+			System.out.println("json: " + film.toString());
+		} else if (type.equals("application/xml")) {
+			try {
+				JAXBContext jaxbContext = JAXBContext.newInstance(Film.class);
+				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				film = (Film) jaxbUnmarshaller.unmarshal(reader);
+				System.out.println("xml: " + film.toString());
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			boolean result = dao.updateFilm(film);
+			
+			if (result) {
+				out.write("Film updated!");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		FilmDAO dao = new FilmDAO();
