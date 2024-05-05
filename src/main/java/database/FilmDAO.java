@@ -49,7 +49,6 @@ public class FilmDAO {
 				c.close();
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -65,7 +64,6 @@ public class FilmDAO {
 					rs.getString("stars"),
 					rs.getString("review"));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	return thisFilm;		
@@ -128,7 +126,6 @@ public class FilmDAO {
 				+ f.getReview()
 				+ "');";
 		   
-		   System.out.println(sql);
 		   b = openConnection().execute(sql);
 		   closeConnection();
 		   b = true;
@@ -150,7 +147,6 @@ public class FilmDAO {
 				   + " review = '" +  f.getReview() + "'"
 				   + " where id = " + f.getId();
 		   
-		   System.out.println(sql);
 		   b = openConnection().execute(sql);
 		   closeConnection();
 		   b = true;
@@ -166,7 +162,6 @@ public class FilmDAO {
 	   try {
 		   String sql = "delete from films where id="+id;
 		   
-		   System.out.println(sql);
 		   b = openConnection().execute(sql);
 		   closeConnection();
 		   b = true;
